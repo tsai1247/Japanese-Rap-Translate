@@ -1,2 +1,2 @@
-# Japanese-Rap-Translate
+# Japanese-Rap-Translator
 for Jiang's Japanese class.
