@@ -2,7 +2,7 @@ import os
 import codecs
 from datetime import datetime as dt
 
-puncList = ['！', '？', '。', '、', '『', '』']
+puncList = ['！', '？', '。', '、', '『', '』', '「', '」']
 # print(chr(12353)) ~ print(chr(12543))
 
 retType = 0
@@ -15,8 +15,15 @@ while retType<1 or retType>3:
         retType = int(retType.split('.')[0])
     except ValueError:
         retType = 0
-
-text = input('Text：\n')
+text = ''
+tmp = input('Text：\n')
+while(len(tmp)>0):
+    while(len(tmp)>0):
+        while(len(tmp)>0):
+            text+=tmp
+            tmp = input()
+        tmp = input()
+    tmp = input()
 
 if retType==1:
     ans = ''
@@ -61,21 +68,40 @@ elif retType==2:
 elif retType==3:
     # puncList = ['！', '？', '。', '、', '『', '』']
     # print(chr(12353)) ~ print(chr(12543))
+    # 12446
 
     ans = '<div>\n\t'
     kannji = ''
     hiragana = ''
     status = True
-
+    inQuote = False
+    pagenum = False
     for i in text:
         if status:
-            if (ord(i) >= 12353 and ord(i)<=12543) or i in puncList:
+            if i==' ' or i=='　':
+                continue
+            if i=='P' or i=='Ｐ':
+                pagenum = True
+                ans+='\n\t<br>\n\t' + i
+                continue
+            elif pagenum and ord(i)<=ord('9') and ord(i)>=ord('0'):
+                ans+=i
+                continue
+            elif pagenum:
+                ans+='\n\t<br>\n\t'
+                pagenum = False
+            if i=='『' or i =='「':
+                inQuote = True
+            elif i=='』' or i=='」':
+                inQuote = False
+            if (ord(i) >= 12353 and ord(i)<=12446) or i in puncList:
+
                 ans+=i
             elif i=='(':
                 status = False
             else:
                 kannji+=i
-            if i=='。':
+            if i=='。' and not inQuote or i=='」':
                 ans+='\n\t<br>\n\t<br>\n\t'
         else:
             if i==')':
@@ -93,12 +119,13 @@ elif retType==3:
     ans += '\n</div>'
 
     ans = '<div lang="ja" id="divResult" style="font-size:28px;">\n' + ans + '\n</div>'
-    print(ans)
+    # print(ans)
     name = '[{}]JapanTranslateor.html'.format(dt.now().strftime('%Y-%m-%d'))
     file = codecs.open(name, 'w', encoding='utf-8')
     file.write(ans)
     file.close()
 
     os.system('start {}'.format(name))
+    # os.system('start {}'.format('.'))
 
 
